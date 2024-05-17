@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  app:
+    container_name: php-container-sg
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8002:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - app-network-sg
+  mysql:
+    image: mysql:5.7.22
+    container_name: mysql-container-sg
+    restart: unless-stopped
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./docker-compose/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345 # ${DB_PASSWORD}
+      SERVICE_NAME: mysql
+    networks:
+      - app-network-sg
+networks:
+  app-network-sg:
+    driver: bridge
